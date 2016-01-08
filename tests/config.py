@@ -1,10 +1,18 @@
+"""Config for tests."""
+
+class RemoteConfig(object):
+    """Config for remote testing."""
+    STORAGE_PROVIDER = "S3"
+    STORAGE_KEY = ""
+    STORAGE_SECRET = ""
+    STORAGE_CONTAINER = "yoredis.com"
+    STORAGE_ALLOWED_EXTENSIONS = []
 
 
-PROVIDER = "S3"
-KEY = ""
-SECRET = ""
-CONTAINER = "yoredis.com"
-
-# FOR LOCAL
-PROVIDER = "LOCAL"
-CONTAINER = "container_1"
+class LocalConfig(object):
+    """Config for local testing."""
+    STORAGE_KEY = ""
+    STORAGE_SECRET = ""
+    STORAGE_PROVIDER = "LOCAL"
+    STORAGE_CONTAINER = 'container_1'
+    STORAGE_ALLOWED_EXTENSIONS = []

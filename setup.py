@@ -39,7 +39,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "Flask==0.10.1",
-        "apache-libcloud==0.17.0",
+        "apache-libcloud==0.19.0",
         "lockfile==0.10.2",
         "shortuuid==0.1",
         "six==1.9.0",
@@ -63,6 +63,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    zip_safe=False
+    zip_safe=False,
+    test_suite="tests",
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest']
 )
-
