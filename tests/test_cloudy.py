@@ -183,7 +183,6 @@ class TestLocalStorage:
             temp_dir,
             name="my_new_file",
             overwrite=True)
-        print(o, o.name, file, temp_dir, file2)
         assert os.path.isfile(file)
         assert file2 == join(temp_dir, "my_new_file.txt")
 
