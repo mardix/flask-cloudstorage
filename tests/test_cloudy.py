@@ -191,7 +191,6 @@ class TestLocalStorage:
         """Test the local server function."""
         object_name = "test_local_server.txt"
         storage.upload(temp_txt_file.name, name=object_name, overwrite=True)
-        print(storage.app.view_functions)
         file_server = storage.app.view_functions['FLASK_CLOUDY_SERVER']
         response = file_server(object_name)
         assert response.status_code == 200
