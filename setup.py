@@ -63,6 +63,8 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    zip_safe=False
+    zip_safe=False,
+    test_suite="tests",
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest']
 )
-

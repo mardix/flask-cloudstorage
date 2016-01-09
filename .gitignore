@@ -1,5 +1,6 @@
 *.py[co]
 __pycache__*
+.cache
 
 # Packages
 *.egg
@@ -7,6 +8,7 @@ __pycache__*
 dist
 build
 eggs
+.eggs
 parts
 bin
 var
@@ -32,14 +34,7 @@ docs/_build*
 .tox
 .cache
 
-tests/*
 !tests/__init__.py
 !tests/config.py
 !tests/test_cloudy.py
-
-tests/data/*
-!tests/data/hello.txt
-!tests/data/hello.js
-
-tests/container_1/*
-!tests/container_1/empty
+!tests/testconf.py
