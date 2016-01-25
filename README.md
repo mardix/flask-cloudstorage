@@ -243,7 +243,7 @@ It will also setup a server endpoint when STORAGE_PROVIDER == LOCAL
 	})
 	
 	# Setup storage
-	storage = new Storage()
+	storage = Storage()
 	storage.init_app(app) 
 	
     @app.route("/upload", methods=["POST", "GET"]):
