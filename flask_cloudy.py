@@ -204,6 +204,7 @@ class Storage(object):
         allowed_extensions = app.config.get("STORAGE_ALLOWED_EXTENSIONS", None)
         serve_files = app.config.get("STORAGE_SERVER", True)
         serve_files_url = app.config.get("STORAGE_SERVER_URL", "files")
+        extra_params = app.config.get("STORAGE_EXTRA", {})
 
         self.config["serve_files"] = serve_files
         self.config["serve_files_url"] = serve_files_url
@@ -220,7 +221,8 @@ class Storage(object):
                       key=key,
                       secret=secret,
                       container=container,
-                      allowed_extensions=allowed_extensions)
+                      allowed_extensions=allowed_extensions,
+                      **extra_params)
 
         self._register_file_server(app)
 
@@ -397,7 +399,7 @@ class Object(object):
 
     def get_url(self, secure=False, longurl=False):
         """
-        Return the url 
+        Return the url
         :param secure: bool - To use https
         :param longurl: bool - On local, reference the local path with the domain
                         ie: http://site.com/files/object.png otherwise /files/object.png
