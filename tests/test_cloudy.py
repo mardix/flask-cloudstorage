@@ -181,3 +181,17 @@ def test_werkzeug_upload():
         assert isinstance(o, Object)
         assert o.name == object_name
 
+def test_storage_delete():
+    storage = app_storage()
+    object_name = "my-txt-hello-rif.txt"
+    o = storage.upload(CWD + "/data/hello.txt",
+                       name=object_name, overwrite=True)
+    result = storage.delete(o.name)
+    assert result == True
+
+
+def test_storage_delete_non_existent():
+    storage = app_storage()
+    object_name = "doesnt-exist.txt"
+    result = storage.delete(object_name)
+    assert result == False
