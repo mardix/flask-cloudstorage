@@ -343,6 +343,17 @@ class Storage(object):
                                                extra=extra)
         return Object(obj=obj)
 
+    def delete(self, object_name):
+        """
+        Return true/false if object deletion successful/unsuccessful or if it doesn't exist
+        :param object_name:
+        :return: bool
+        """
+        
+        obj = self.get(object_name)
+        if obj is not None:
+            return self.driver.delete_object(obj._obj)
+        return False
     def _safe_object_name(self, object_name):
         """ Add a UUID if to a object name if it exists. To prevent overwrites
         :param object_name:
@@ -423,7 +434,7 @@ class Object(object):
 
     def get_url(self, secure=False, longurl=False):
         """
-        Return the url 
+        Return the url
         :param secure: bool - To use https
         :param longurl: bool - On local, reference the local path with the domain
                         ie: http://site.com/files/object.png otherwise /files/object.png
