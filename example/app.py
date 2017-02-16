@@ -23,7 +23,7 @@ def index():
 @app.route("/view/<path:object_name>")
 def view(object_name):
     obj = storage.get(object_name)
-    print obj.name
+    print(obj.name)
     return render_template("view.html", obj=obj)
 
 @app.route("/upload", methods=["POST"])
