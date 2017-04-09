@@ -53,12 +53,12 @@ Version: 1.x.x
 
 
 	# A download endpoint, to download the file
-    @app.route("/download/<path:object_name>"):
+    @app.route("/download/<path:object_name>")
     def download(object_name):
         my_object = storage.get(object_name)
         if my_object:
-        	download_url = my_object.download()
-        	return download_url
+        	download_url = my_object.download_url()
+        	return redirect(download_url)
         else:	
         	abort(404, "File doesn't exist")
 
