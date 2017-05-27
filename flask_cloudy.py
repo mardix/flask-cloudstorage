@@ -36,7 +36,8 @@ EXTENSIONS = {
     "AUDIO": ["wav", "mp3", "aac", "ogg", "oga", "flac"],
     "DATA": ["csv", "ini", "json", "plist", "xml", "yaml", "yml"],
     "SCRIPT": ["js", "php", "pl", "py", "rb", "sh"],
-    "ARCHIVE": ["gz", "bz2", "zip", "tar", "tgz", "txz", "7z"]
+    "ARCHIVE": ["gz", "bz2", "zip", "tar", "tgz", "txz", "7z"],
+    "CAD": ["stl", "dxf"],
 }
 
 ALL_EXTENSIONS = EXTENSIONS["TEXT"] \
@@ -44,7 +45,8 @@ ALL_EXTENSIONS = EXTENSIONS["TEXT"] \
                  + EXTENSIONS["IMAGE"] \
                  + EXTENSIONS["AUDIO"] \
                  + EXTENSIONS["DATA"] \
-                 + EXTENSIONS["ARCHIVE"]
+                 + EXTENSIONS["ARCHIVE"] \
+                 + EXTENSIONS["CAD"]
 
 URL_REGEXP = re.compile(r'^(http|https|ftp|ftps)://')
 
@@ -125,6 +127,7 @@ class Storage(object):
     DATA = EXTENSIONS["DATA"]
     SCRIPT = EXTENSIONS["SCRIPT"]
     ARCHIVE = EXTENSIONS["ARCHIVE"]
+    CAD = EXTENSIONS["CAD"]
 
     allowed_extensions = TEXT + DOCUMENT + IMAGE + AUDIO + DATA
 
@@ -486,7 +489,7 @@ class Object(object):
 
     def get_url(self, secure=False, longurl=False):
         """
-        Return the url 
+        Return the url
         :param secure: bool - To use https
         :param longurl: bool - On local, reference the local path with the domain
                         ie: http://site.com/files/object.png otherwise /files/object.png
