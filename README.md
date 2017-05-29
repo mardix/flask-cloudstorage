@@ -555,6 +555,8 @@ Then run:
 
     tox
 
+Highly recommended to clean these directories before tox running.
+
 ---
 
 I hope you find this library useful, enjoy!

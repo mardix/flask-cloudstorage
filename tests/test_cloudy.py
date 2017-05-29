@@ -181,6 +181,19 @@ def test_storage_upload_with_prefix():
     assert o.name == full_name
 
 
+def test_storage_upload_with_prefix_function():
+    def upload_to():
+        tree = ["dir1", "dir2", "dir3"]
+        return "/".join(tree) + "/"
+
+    storage = app_storage()
+    object_name = "my-txt-hello-hello"
+    full_name = "%s%s.%s" % (upload_to(), object_name, "txt")
+    o = storage.upload(CWD + "/data/hello.txt", name=object_name, prefix=upload_to, overwrite=True)
+    assert full_name in storage
+    assert o.name == full_name
+
+
 def test_save_to():
     storage = app_storage()
     object_name = "my-txt-hello-to-save.txt"

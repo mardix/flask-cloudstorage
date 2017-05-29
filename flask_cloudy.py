@@ -312,7 +312,7 @@ class Storage(object):
         To upload file
         :param file: FileStorage object or string location
         :param name: The name of the object.
-        :param prefix: A prefix for the object. Can be in the form of directory tree
+        :param prefix: A prefix for the object. Can be in the form of directory tree or generator.
         :param extensions: list of extensions to allow. If empty, it will use all extension.
         :param overwrite: bool - To overwrite if file exists
         :param public: bool - To set acl to private or public-read. Having acl in kwargs will override it
@@ -356,7 +356,10 @@ class Storage(object):
                 name = secure_filename(name)
 
             if prefix:
-                name = prefix.lstrip("/") + name
+                if callable(prefix):
+                    name = prefix().lstrip("/") + name
+                else:
+                    name = prefix.lstrip("/") + name
 
             if not overwrite:
                 name = self._safe_object_name(name)
