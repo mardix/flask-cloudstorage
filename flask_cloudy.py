@@ -10,7 +10,6 @@ import hmac
 import hashlib
 import warnings
 from contextlib import contextmanager
-import copy
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from importlib import import_module
@@ -50,8 +49,10 @@ ALL_EXTENSIONS = EXTENSIONS["TEXT"] \
 
 URL_REGEXP = re.compile(r'^(http|https|ftp|ftps)://')
 
+
 class InvalidExtensionError(Exception):
     pass
+
 
 def get_file_name(filename):
     """
@@ -61,6 +62,7 @@ def get_file_name(filename):
     """
     return os.path.basename(filename)
 
+
 def get_file_extension(filename):
     """
     Return a file extension
@@ -68,6 +70,7 @@ def get_file_extension(filename):
     :return: str
     """
     return os.path.splitext(filename)[1][1:].lower()
+
 
 def get_file_extension_type(filename):
     """
@@ -81,6 +84,7 @@ def get_file_extension_type(filename):
             if ext in group:
                 return name
     return "OTHER"
+
 
 def get_driver_class(provider):
     """
@@ -101,6 +105,7 @@ def get_driver_class(provider):
     else:
         driver = getattr(Provider, provider.upper())
     return get_driver(driver)
+
 
 def get_provider_name(driver):
     """
@@ -641,8 +646,7 @@ class Object(object):
                            _external=True)
         else:
             driver_name = self.driver.name.lower()
-            expires = (datetime.datetime.now()
-                       + datetime.timedelta(seconds=timeout)).strftime("%s")
+            expires = (datetime.datetime.now() + datetime.timedelta(seconds=timeout)).strftime("%s")
 
             if 's3' in driver_name or 'google' in driver_name:
 
@@ -661,8 +665,8 @@ class Object(object):
 
             elif 'cloudfiles' in driver_name:
                 return self.driver.ex_get_object_temp_url(self._obj,
-                                                               method="GET",
-                                                               timeout=expires)
+                                                          method="GET",
+                                                          timeout=expires)
             else:
                 raise NotImplemented("This provider '%s' doesn't support or "
                                      "doesn't have a signed url "

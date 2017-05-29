@@ -3,12 +3,12 @@
 
 ## About
 
-A Flask extension to **access, upload, download, save and delete** files on cloud storage providers such as: 
+A Flask extension to **access, upload, download, save and delete** files on cloud storage providers such as:
 AWS S3, Google Storage, Microsoft Azure, Rackspace Cloudfiles, and even Local file system.
 
 For local file storage, it also provides a flask endpoint to access the files.
- 
- 
+
+
 Version: 1.x.x
 
 ---
@@ -17,38 +17,38 @@ Version: 1.x.x
 
 	from flask import Flask, request
 	from flask_cloudy import Storage
-	
+
 	app = Flask(__name__)
-	
-	# Update the config 
+
+	# Update the config
 	app.config.update({
-		"STORAGE_PROVIDER": "LOCAL", # Can also be S3, GOOGLE_STORAGE, etc... 
+		"STORAGE_PROVIDER": "LOCAL", # Can also be S3, GOOGLE_STORAGE, etc...
 		"STORAGE_KEY": "",
 		"STORAGE_SECRET": "",
 		"STORAGE_CONTAINER": "./",  # a directory path for local, bucket name of cloud
 		"STORAGE_SERVER": True,
 		"STORAGE_SERVER_URL": "/files" # The url endpoint to access files on LOCAL provider
 	})
-	
+
 	# Setup storage
 	storage = Storage()
-	storage.init_app(app) 
-	
+	storage.init_app(app)
+
     @app.route("/upload", methods=["POST", "GET"]):
     def upload():
         if request.method == "POST":
         	file = request.files.get("file")
             my_upload = storage.upload(file)
-            
+
             # some useful properties
             name = my_upload.name
             extension = my_upload.extension
             size = my_upload.size
             url = my_upload.url
-            
+
             return url
-        
-    # Pretending the file uploaded is "my-picture.jpg"    
+
+    # Pretending the file uploaded is "my-picture.jpg"
 	# it will return a url in the format: http://domain.com/files/my-picture.jpg
 
 
@@ -59,17 +59,17 @@ Version: 1.x.x
         if my_object:
         	download_url = my_object.download()
         	return download_url
-        else:	
+        else:
         	abort(404, "File doesn't exist")
 
----        
-       
+---
+
 Go to the "example" directory to get a workable flask-cloud example
 
 
---- 
-  
-  
+---
+
+
 ### Features:
 
 - Browse files
@@ -100,8 +100,8 @@ Go to the "example" directory to get a workable flask-cloud example
 
 - Flask
 
-- Apache-Libcloud 
- 
+- Apache-Libcloud
+
 ---
 
 ## Install & Config
@@ -116,9 +116,9 @@ Go to the "example" directory to get a workable flask-cloud example
 
 Within your Flask application's settings you can provide the following settings to control
 the behavior of Flask-Cloudy
- 
 
-**- STORAGE_PROVIDER** (str) 
+
+**- STORAGE_PROVIDER** (str)
 
 - LOCAL
 - S3
@@ -148,7 +148,7 @@ None for LOCAL
 
 The *BUCKET NAME* for cloud storage providers
 
-For *LOCAL* provider, this is the local directory path 
+For *LOCAL* provider, this is the local directory path
 
 
 **STORAGE_ALLOWED_EXTENSIONS** (list)
@@ -159,7 +159,7 @@ Example: ["png", "jpg", "jpeg", "mp3"]
 
 **STORAGE_SERVER** (bool)
 
-For *LOCAL* provider only. 
+For *LOCAL* provider only.
 
 True to expose the files in the container so they can be accessed
 
@@ -169,7 +169,7 @@ Default: *True*
 
 For *LOCAL* provider only.
 
-The endpoint to access the files from the local storage. 
+The endpoint to access the files from the local storage.
 
 Default: */files*
 
@@ -181,17 +181,17 @@ Flask-Cloudy is a wrapper around Apache-Libcloud, the Storage class gives you ac
 
 *Lexicon:*
 
-Object: A file or a file path. 
+Object: A file or a file path.
 
 Container: The main directory, or a bucket name containing all the objects
 
-Provider: The method 
+Provider: The method
 
-Storage: 
+Storage:
 
 ### flask_cloudy.Storage
 
-The **Storage** class allows you to access, upload, get an object from the Storage. 
+The **Storage** class allows you to access, upload, get an object from the Storage.
 
 #### Storage(provider, key=None, secret=None, container=None, allowed_extensions=None)
 
@@ -212,12 +212,12 @@ The **Storage** class allows you to access, upload, get an object from the Stora
 
 - secret: The secret access key of the cloud storage. None when provider is LOCAL
 
-- container: 
+- container:
 
-     - For cloud storage, use the **BUCKET NAME** 
-     
-     - For LOCAL provider, it's the directory path where to access the files 
-     
+     - For cloud storage, use the **BUCKET NAME**
+
+     - For LOCAL provider, it's the directory path where to access the files
+
 - allowed_extensions: List of extensions to upload to upload
 
 
@@ -229,40 +229,40 @@ It will also setup a server endpoint when STORAGE_PROVIDER == LOCAL
 
 	from flask import Flask, request
 	from flask_cloudy import Storage
-	
+
 	app = Flask(__name__)
-	
-	# Update the config 
+
+	# Update the config
 	app.config.update({
-		"STORAGE_PROVIDER": "LOCAL", # Can also be S3, GOOGLE_STORAGE, etc... 
+		"STORAGE_PROVIDER": "LOCAL", # Can also be S3, GOOGLE_STORAGE, etc...
 		"STORAGE_KEY": "",
 		"STORAGE_SECRET": "",
 		"STORAGE_CONTAINER": "./",  # a directory path for local, bucket name of cloud
 		"STORAGE_SERVER": True,
 		"STORAGE_SERVER_URL": "/files"
 	})
-	
+
 	# Setup storage
 	storage = Storage()
-	storage.init_app(app) 
-	
+	storage.init_app(app)
+
     @app.route("/upload", methods=["POST", "GET"]):
     def upload():
         if request.method == "POST":
         	file = request.files.get("file")
             my_upload = storage.upload(file)
-            
+
             # some useful properties
             name = my_upload.name
             extension = my_upload.extension
             size = my_upload.size
             url = my_upload.url
-            
+
             return url
-        
-    # Pretending the file uploaded is "my-picture.jpg"    
+
+    # Pretending the file uploaded is "my-picture.jpg"
 	# it will return a url in the format: http://domain.com/files/my-picture.jpg
-	
+
 
 
 #### Storage.get(object_name)
@@ -277,9 +277,9 @@ Some valid object names, they can contains slashes to indicate it's a directory
 
 
     - file.txt
-    
+
     - my_dir/file.txt
-    
+
     - my_dir/sub_dir/file.txt
 
 .
@@ -287,8 +287,8 @@ Some valid object names, they can contains slashes to indicate it's a directory
 	storage = Storage(provider, key, secret, container)
 	object_name = "hello.txt"
 	my_object = storage.get(object_name)
-	
-	
+
+
 
 #### Storage.upload(file, name=None, prefix=None, extension=[], overwrite=Flase, public=False, random_name=False)
 
@@ -298,7 +298,7 @@ To save or upload a file in the container
 
 - name: to give the file a new name
 
-- prefix: a name to add in front of the file name. Add a slash at the end of 
+- prefix: a name to add in front of the file name. Add a slash at the end of
 prefix to make it a directory otherwise it will just append it to the name
 
 - extensions: list of extensions
@@ -313,44 +313,44 @@ prefix to make it a directory otherwise it will just append it to the name
 
 	storage = Storage(provider, key, secret, container)
 	my_file = "my_dir/readme.md"
-	
-		
+
+
 **1) Upload file + file name is the name of the uploaded file **
-	
-	storage.upload(my_file)	
-	
-	
+
+	storage.upload(my_file)
+
+
 **2) Upload file + file name is now `new_readme`. It will will keep the extension of the original file**
-	
+
 	storage.upload(my_file, name="new_readme")
-	
+
 The uploaded file will be named: **new_readme.md**
-	
-	
+
+
 **3) Upload file to a different path using `prefix`**
-	
-	
+
+
 	storage.upload(my_file, name="new_readme", prefix="my_dir/")
 
-	
+
 now the filename becomes **my_dir/new_readme.md**
 
-On LOCAL it will create the directory *my_dir* if it doesn't exist. 
+On LOCAL it will create the directory *my_dir* if it doesn't exist.
 
-	
+
 	storage.upload(my_file, name="new_readme", prefix="my_new_path-")
 
-	
+
 now the filename becomes **my_new_path-new_readme.md**
 
 ATTENTION: If you want the file to be place in a subdirectory, `prefix` must have the trailing slash
- 
+
 
 **4a.) Public upload**
 
 	storage.upload(my_file, public=True)
-	
-	
+
+
 **4b.) Private upload**
 
 	storage.upload(my_file, public=False)
@@ -358,27 +358,27 @@ ATTENTION: If you want the file to be place in a subdirectory, `prefix` must hav
 **5) Upload + random name**
 
     storage.upload(my_file, random_name=True)
-    
+
  **6) Upload with external url***
- 
- You can upload an item from the internet directly to your storage 
- 
+
+ You can upload an item from the internet directly to your storage
+
     storage.upload("http://the.site.path.com/abc.png")
-    
+
 It will save the image to your storage
 
 
 #### Storage.create(object_name, size=0, hash=None, extra=None, metda_data=None)
 
-Explicitly create an object that may exist already. Usually, when paramameters (name, size, hash, etc...) are already saved, let's say in the database, and you want Storage to manipulate the file. 
+Explicitly create an object that may exist already. Usually, when paramameters (name, size, hash, etc...) are already saved, let's say in the database, and you want Storage to manipulate the file.
 
 	storage = Storage(provider, key, secret, container)
 	existing_name = "holla.txt"
 	existing_size = "8000" # in bytes
 	new_object = storage.create(object_name=existing_name, size=existing_size)
-	
+
 	# Now I can do
-	url = new_object.url 
+	url = new_object.url
 	size = len(new_object)
 
 
@@ -387,7 +387,7 @@ Explicitly create an object that may exist already. Usually, when paramameters (
 A context manager to temporarily use a different container on the same provider
 
     storage = Storage(provider, key, secret, container)
-	
+
     with storage.use(another_container_name) as s3:
         s3.upload(newfile)
 
@@ -413,7 +413,7 @@ Each object is an instance on **flask_cloudy.Object**
 
 	storage = Storage(provider, key, secret, container)
 	my_file = "hello.txt"
-	
+
 	if my_file in storage:
 		print("File is in the storage")
 
@@ -428,10 +428,10 @@ Usually, you will get a cloud object by accessing an object in the container.
 
 	storage = Storage(provider, key, secret, container)
 	my_object = storage.get("my_object.txt")
-	
+
 Properties:
-	
-#### Object.name 
+
+#### Object.name
 
 The name of the object
 
@@ -454,7 +454,7 @@ On LOCAL, it will return the url without the domain name ( ie: /files/my-file.jp
 
 For cloud providers it will return the full url
 
-#### Object.full_url 
+#### Object.full_url
 
 Returns the full url of the object
 
@@ -463,27 +463,27 @@ Specially for LOCAL provider, it will return the url with the domain.
 For cloud providers, it will return the full url just like **Object.url**
 
 
-#### Object.secure_url 
+#### Object.secure_url
 
-Return a secured url, with **https://** 
+Return a secured url, with **https://**
 
 
 #### Object.path
 
 The path of the object relative to the container
- 
+
 #### Object.full_path
 
 For Local, it will show the full path of the object, otherwise it just returns
 the Object.path
- 
 
-#### Object.provider_name 
+
+#### Object.provider_name
 
 The provider name: ie: Local, S3,...
 
 
-#### Object.type 
+#### Object.type
 
 The type of the object, ie: IMAGE, AUDIO, TEXT,... OTHER
 
@@ -496,7 +496,7 @@ Methods:
 
 #### Object.save_to(destination, name=None, overwrite=False, delete_on_failure=True)
 
-To save the object to a local path 
+To save the object to a local path
 
 - destination: The directory to save the object to
 
@@ -512,7 +512,7 @@ To save the object to a local path
 	my_object = storage.get("my_object.txt")
 	my_new_path = "/my/new/path"
 	my_new_file = my_object.save_to(my_new_path)
-	
+
 	print(my_new_file) # Will print -> /my/new/path/my_object.txt
 
 
@@ -528,8 +528,8 @@ Return a URL that triggers the browser download of the file. On cloud providers 
 
 	storage = Storage(provider, key, secret, container)
 	my_object = storage.get("my_object.txt")
-	download_url = my_object.download_url()	
-	
+	download_url = my_object.download_url()
+
 	# or with flask
 
     @app.route("/download/<path:object_name>"):
@@ -538,7 +538,7 @@ Return a URL that triggers the browser download of the file. On cloud providers 
         if my_object:
         	download_url = my_object.download_url()
         	return redirect(download_url)
-        else:	
+        else:
         	abort(404, "File doesn't exist")
             
 ---
@@ -546,9 +546,8 @@ Return a URL that triggers the browser download of the file. On cloud providers 
 I hope you find this library useful, enjoy!
 
 
-Mardix :) 
+Mardix :)
 
 ---
 
 License: MIT - Copyright 2017 Mardix
-
