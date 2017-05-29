@@ -10,7 +10,6 @@ import hmac
 import hashlib
 import warnings
 from contextlib import contextmanager
-import copy
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from importlib import import_module
@@ -36,7 +35,8 @@ EXTENSIONS = {
     "AUDIO": ["wav", "mp3", "aac", "ogg", "oga", "flac"],
     "DATA": ["csv", "ini", "json", "plist", "xml", "yaml", "yml"],
     "SCRIPT": ["js", "php", "pl", "py", "rb", "sh"],
-    "ARCHIVE": ["gz", "bz2", "zip", "tar", "tgz", "txz", "7z"]
+    "ARCHIVE": ["gz", "bz2", "zip", "tar", "tgz", "txz", "7z"],
+    "CAD": ["stl", "dxf"],
 }
 
 ALL_EXTENSIONS = EXTENSIONS["TEXT"] \
@@ -44,12 +44,15 @@ ALL_EXTENSIONS = EXTENSIONS["TEXT"] \
                  + EXTENSIONS["IMAGE"] \
                  + EXTENSIONS["AUDIO"] \
                  + EXTENSIONS["DATA"] \
-                 + EXTENSIONS["ARCHIVE"]
+                 + EXTENSIONS["ARCHIVE"] \
+                 + EXTENSIONS["CAD"]
 
 URL_REGEXP = re.compile(r'^(http|https|ftp|ftps)://')
 
+
 class InvalidExtensionError(Exception):
     pass
+
 
 def get_file_name(filename):
     """
@@ -59,6 +62,7 @@ def get_file_name(filename):
     """
     return os.path.basename(filename)
 
+
 def get_file_extension(filename):
     """
     Return a file extension
@@ -66,6 +70,7 @@ def get_file_extension(filename):
     :return: str
     """
     return os.path.splitext(filename)[1][1:].lower()
+
 
 def get_file_extension_type(filename):
     """
@@ -79,6 +84,7 @@ def get_file_extension_type(filename):
             if ext in group:
                 return name
     return "OTHER"
+
 
 def get_driver_class(provider):
     """
@@ -99,6 +105,7 @@ def get_driver_class(provider):
     else:
         driver = getattr(Provider, provider.upper())
     return get_driver(driver)
+
 
 def get_provider_name(driver):
     """
@@ -125,6 +132,7 @@ class Storage(object):
     DATA = EXTENSIONS["DATA"]
     SCRIPT = EXTENSIONS["SCRIPT"]
     ARCHIVE = EXTENSIONS["ARCHIVE"]
+    CAD = EXTENSIONS["CAD"]
 
     allowed_extensions = TEXT + DOCUMENT + IMAGE + AUDIO + DATA
 
@@ -304,7 +312,7 @@ class Storage(object):
         To upload file
         :param file: FileStorage object or string location
         :param name: The name of the object.
-        :param prefix: A prefix for the object. Can be in the form of directory tree
+        :param prefix: A prefix for the object. Can be in the form of directory tree or generator.
         :param extensions: list of extensions to allow. If empty, it will use all extension.
         :param overwrite: bool - To overwrite if file exists
         :param public: bool - To set acl to private or public-read. Having acl in kwargs will override it
@@ -348,7 +356,10 @@ class Storage(object):
                 name = secure_filename(name)
 
             if prefix:
-                name = prefix.lstrip("/") + name
+                if callable(prefix):
+                    name = prefix().lstrip("/") + name
+                else:
+                    name = prefix.lstrip("/") + name
 
             if not overwrite:
                 name = self._safe_object_name(name)
@@ -486,7 +497,7 @@ class Object(object):
 
     def get_url(self, secure=False, longurl=False):
         """
-        Return the url 
+        Return the url
         :param secure: bool - To use https
         :param longurl: bool - On local, reference the local path with the domain
                         ie: http://site.com/files/object.png otherwise /files/object.png
@@ -638,8 +649,7 @@ class Object(object):
                            _external=True)
         else:
             driver_name = self.driver.name.lower()
-            expires = (datetime.datetime.now()
-                       + datetime.timedelta(seconds=timeout)).strftime("%s")
+            expires = (datetime.datetime.now() + datetime.timedelta(seconds=timeout)).strftime("%s")
 
             if 's3' in driver_name or 'google' in driver_name:
 
@@ -658,8 +668,8 @@ class Object(object):
 
             elif 'cloudfiles' in driver_name:
                 return self.driver.ex_get_object_temp_url(self._obj,
-                                                               method="GET",
-                                                               timeout=expires)
+                                                          method="GET",
+                                                          timeout=expires)
             else:
                 raise NotImplemented("This provider '%s' doesn't support or "
                                      "doesn't have a signed url "
