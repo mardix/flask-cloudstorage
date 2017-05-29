@@ -540,7 +540,21 @@ Return a URL that triggers the browser download of the file. On cloud providers 
         	return redirect(download_url)
         else:
         	abort(404, "File doesn't exist")
-            
+
+---
+
+## Tests
+
+To run the tests you should install tox package into your virtual environment.
+
+By default the tests are configured for LOCAL provider, so you will need to:
+
+    mkdir tests/container_1 tests/container_2
+
+Then run:
+
+    tox
+
 ---
 
 I hope you find this library useful, enjoy!
